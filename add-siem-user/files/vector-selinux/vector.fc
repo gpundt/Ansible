@@ -1,0 +1,12 @@
+/etc/init\.d/vector				--      gen_context(system_u:object_r:vector_initrc_exec_t,s0)
+/etc/rc\.d/init\.d/vector                     --      gen_context(system_u:object_r:vector_initrc_exec_t,s0)
+/etc/vector(/.*)?					gen_context(system_u:object_r:vector_config_t,s0)
+
+/usr/bin/vector                               --      gen_context(system_u:object_r:vector_exec_t,s0)
+
+/etc/systemd/system/vector.*			--      gen_context(system_u:object_r:vector_unit_t,s0)
+/usr/lib/systemd/system/vector.*		--     	gen_context(system_u:object_r:vector_unit_t,s0)
+
+/var/lib/vector(/.*)?                                 gen_context(system_u:object_r:vector_var_lib_t,s0)
+
+/var/log/vector(/.*)?					gen_context(system_u:object_r:vector_log_t,s0)

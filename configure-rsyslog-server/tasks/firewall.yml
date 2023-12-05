@@ -1,0 +1,14 @@
+# Author: Griffin Pundt
+# Date: 12/5/2023
+# Notes: This task will add the necessary firewall rules to recieve rsyslogs
+---
+- name: change firewall
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop:
+    - 514/tcp
+    - 514/udp
+  notify:
+  - reload firewall

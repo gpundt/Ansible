@@ -1,0 +1,9 @@
+---
+# tasks file for /siem-stack/ansible/roles/configure-rsyslog-server
+- block:
+  - import_tasks: firewall.yml
+  - import_tasks: rsyslog.yml
+  rescue:
+  - name: print errors
+    ansible.builtin.debug:
+      msg: 'something went wrong, please observer errors'
