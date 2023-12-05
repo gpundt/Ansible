@@ -1,0 +1,82 @@
+# Prometheus sink example
+# ------------------------------------------------------------------------------
+# Parsing logs as metrics and exposing into Prometheus
+
+data_dir = "/var/lib/vector"
+
+# Ingest file logs
+#[sources.file]
+#type = "file"
+#include = ["sample.log"]
+#start_at_beginning = true
+
+#[sources.vector_aggregation]
+#type = "vector"
+#address = "0.0.0.0:6000"
+
+[sources.vector_logs]
+type = "internal_logs"
+
+[sources.vector_metrics]
+type = "internal_metrics"
+
+[sources.host_metrics]
+type = "host_metrics"
+filesystem.mountpoints.excludes = ["/run/user/*/gvfs"]
+
+#[sources.syslog]
+#type = "syslog"
+#address = "0.0.0.0:1514"
+#mode = "tcp"
+##path = "/path/to/socket"
+
+[sinks.console_logs]
+inputs = ["vector_logs"]
+type = "console"
+encoding.codec = "text"
+
+#[sinks.prometheus]
+#inputs = ["vector_metrics","host_metrics","vector_aggregation"]
+#type = "prometheus_exporter"
+#default_namespace = "vector_${HOSTNAME}"
+#buckets = [0.0, 10.0, 100.0, 1000.0, 10000.0, 100001.0]
+#address = "0.0.0.0:9099"
+
+#[sinks.loki]
+#type = "loki"
+#inputs = [ "syslog" ]
+#endpoint = "http://localhost:3100"
+#[sinks.loki.labels]
+#forwarder = "vector_${HOSTNAME}"
+#host = "{{.host}}"
+#hostname = "{{.hostname}}"
+#severity = "{{.severity}}"
+#source_ip = "{{.source_ip}}"
+#application = "{{.appname}}"
+#facility = "{{.facility}}"
+#[sinks.loki.encoding]
+#codec="text"
+
+#[sinks.es_cluster]
+#inputs       = ["syslog"]
+#type         = "elasticsearch"
+#endpoints    = [ "https://localhost:9200" ]
+#api_version = "v8"
+#[sinks.es_cluster.tls] # CHANGE THIS LATER
+#verify_certificate = false
+#[sinks.es_cluster.bulk]
+#index        = "vector-%Y-%m-%d"             # daily indices
+#[sinks.es_cluster.auth]
+#strategy     = "basic"
+#user         = "elastic"
+#password     = "RcWDoz2BlC7fmso+Cl6u"
+
+[sinks.vector_export]
+type = "vector"
+inputs = [ "vector_metrics", "host_metrics" ]
+address = "<SIEM STACK VM IP>:6000"
+
+#[sinks.vector_export2]
+#type = "vector"
+#inputs = [ "vector_metrics", "host_metrics" ]
+#address = "siem-stack2:6000"

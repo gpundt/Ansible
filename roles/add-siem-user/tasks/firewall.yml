@@ -1,0 +1,15 @@
+# Author: Griffin Pundt
+# Date: 12/5/2023
+# Notes: This task will enable all required firewall ports and then restart/reload firewalld
+
+---
+- name: change firewall ports
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop:
+  - 514/tcp
+  notify:
+  - restart firewalld
+  - reload firewalld

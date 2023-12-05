@@ -1,0 +1,8 @@
+# Author: Griffin Pundt
+# Date: 12/5/2023
+# Notes: This playbook will install the vector agent on a target host, then configure to forward logs and vector metrics to correct servers 
+
+---
+ - hosts: all
+   roles:
+   - add-siem-user

@@ -1,0 +1,7 @@
+# Author: Griffin Pundt
+# Date: 12/5/2023
+# Notes: This playbook will configure a target host to receive and then forward logs to aggregation server 
+---
+ - hosts: all
+   roles:
+   - configure-rsyslog-server

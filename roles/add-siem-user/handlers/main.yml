@@ -1,0 +1,17 @@
+---
+# handlers file for /siem-stack/ansible/roles/add-siem-user
+
+- name: restart systemd
+  command: systemctl daemon-reload
+
+- name: restart rsyslog
+  service: name=rsyslog state=restarted
+
+- name: restart firewalld
+  command: systemctl restart firewalld.service
+
+- name: reload firewall
+  command: firewall-cmd --reload
+
+- name: restart vector
+  service: name=vector.service state=restarted enabled=yes

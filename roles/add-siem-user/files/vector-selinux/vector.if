@@ -1,0 +1,196 @@
+## <summary>policy for vector</summary>
+
+########################################
+## <summary>
+##	Execute vector_exec_t in the vector domain.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`vector_domtrans',`
+	gen_require(`
+		type vector_t, vector_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, vector_exec_t, vector_t)
+')
+
+######################################
+## <summary>
+##	Execute vector in the caller domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`vector_exec',`
+	gen_require(`
+		type vector_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	can_exec($1, vector_exec_t)
+')
+
+########################################
+## <summary>
+##	Read vector's log files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`vector_read_log',`
+	gen_require(`
+		type vector_log_t;
+	')
+
+	logging_search_logs($1)
+	read_files_pattern($1, vector_log_t, vector_log_t)
+')
+
+########################################
+## <summary>
+##	Append to vector log files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`vector_append_log',`
+	gen_require(`
+		type vector_log_t;
+	')
+
+	logging_search_logs($1)
+	append_files_pattern($1, vector_log_t, vector_log_t)
+')
+
+########################################
+## <summary>
+##	Manage vector log files
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`vector_manage_log',`
+	gen_require(`
+		type vector_log_t;
+	')
+
+	logging_search_logs($1)
+	manage_dirs_pattern($1, vector_log_t, vector_log_t)
+	manage_files_pattern($1, vector_log_t, vector_log_t)
+	manage_lnk_files_pattern($1, vector_log_t, vector_log_t)
+')
+
+########################################
+## <summary>
+##	Execute vector server in the vector domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed to transition.
+##	</summary>
+## </param>
+#
+interface(`vector_systemctl',`
+	gen_require(`
+		type vector_t;
+		type vector_unit_file_t;
+	')
+
+	systemd_exec_systemctl($1)
+        systemd_read_fifo_file_passwd_run($1)
+	allow $1 vector_unit_file_t:file read_file_perms;
+	allow $1 vector_unit_file_t:service manage_service_perms;
+
+	ps_process_pattern($1, vector_t)
+')
+
+
+########################################
+## <summary>
+##	All of the rules required to administrate
+##	an vector environment
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`vector_admin',`
+	gen_require(`
+		type vector_t;
+		type vector_initrc_exec_t;
+		type vector_log_t;
+		type vector_var_lib_t;
+		type vector_unit_file_t;
+	')
+
+	allow $1 vector_t:process { signal_perms };
+	ps_process_pattern($1, vector_t)
+
+    	tunable_policy(`deny_ptrace',`',`
+        	allow $1 vector_t:process ptrace;
+    	')
+
+	vector_initrc_domtrans($1)
+	domain_system_change_exemption($1)
+	role_transition $2 vector_initrc_exec_t system_r;
+	allow $2 system_r;
+
+	logging_search_logs($1)
+	admin_pattern($1, vector_log_t)
+
+	files_search_var_lib($1)
+	admin_pattern($1, vector_var_lib_t)
+
+	vector_systemctl($1)
+	admin_pattern($1, vector_unit_file_t)
+	allow $1 vector_unit_file_t:service all_service_perms;
+	#optional_policy(`
+	#	systemd_passwd_agent_exec($1)
+	#	systemd_read_fifo_file_passwd_run($1)
+	#')
+')
+
+########################################
+## <summary>
+##      Allow domain to name_connect to vector's prometheus port. Default :9100
+## </summary>
+## <param name="domain">
+## <summary>
+##      Domain allowed access
+## </summary>
+## </param>
+#
+interface(`connect_vector_port',`
+        gen_require(`
+		class tcp_socket name_connect;
+                type vector_port_t;
+        ')
+
+	allow $1 vector_port_t:tcp_socket name_connect;
+')

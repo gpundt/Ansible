@@ -1,0 +1,16 @@
+# Author: Griffin Pundt
+# Date: 12/5/2023
+# Notes: This task will copy the vector RPM packages, vector config files, and selinux polices. Then restart/enable vector.service
+---
+- name: Copy vector RPM to target host in /tmp/
+  copy: src=files/vector-*.x86_64.rpm dest=/tmp/
+
+- name: RPM install vector
+  command: sudo rpm -i /tmp/vector-*.x86_64.rpm
+
+- name: Move vector.toml
+  copy: src=files/vector.toml dest=/etc/vector/vector.tom;
+
+
+- name: Start vector
+  service: name=vector state=restarted enabled=yes

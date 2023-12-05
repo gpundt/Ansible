@@ -1,0 +1,12 @@
+# Author: Griffin Pundt
+# Date: 12/5/2023
+# Notes: This task will copy forwarding.conf file to the target host, then restart rsyslog.service
+---
+- name: Start and enable rsyslog
+  service: name=rsyslog state=restarted enabled=yes
+
+- name: Copy rsyslog.conf
+  copy: src=files/rsyslog.conf dest=/etc/rsyslog.conf
+  notify:
+  - restart systemd
+  - restart rsyslog

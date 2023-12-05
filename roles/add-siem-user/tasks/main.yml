@@ -1,0 +1,12 @@
+---
+# tasks file for /siem-stack/ansible/roles/add-siem-user
+
+- block:
+  - import_tasks: firewall.yml
+  - import_tasks: rsyslog.yml
+  - import_tasks: install_vector.yml
+  
+  rescue:
+  - name: Print errors
+    ansible.builtin.debug:
+      msg: 'Something went wrong, please check errors and debug'

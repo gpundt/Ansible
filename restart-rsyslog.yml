@@ -1,0 +1,13 @@
+# Author: Griffin Pundt
+# Date: 11/8/2023
+# Notes: This playbook will restsrt rsyslog.service on target hosts
+
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+  
+  - name: restart rsyslog
+    service:
+     - name: rsyslog
+     - state: restarted
