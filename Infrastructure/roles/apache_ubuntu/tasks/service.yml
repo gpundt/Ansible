@@ -1,0 +1,7 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/5/2024
+---
+#Restarts necessary services
+- name: Restart and enable apache2 service
+  service: name=apache2 state=restarted enabled=yes

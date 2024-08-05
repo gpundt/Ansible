@@ -1,0 +1,18 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/5/2024
+---
+#Installs necessary packages to run the webserver
+- name: Update apt package cache
+  apt:
+    update_cache: yes
+
+- name: Install Apache package
+  apt:
+    name: apache2
+    present: yes
+    
+- name: Install ufw firewall
+  apt:
+    name: ufw
+    present: yes

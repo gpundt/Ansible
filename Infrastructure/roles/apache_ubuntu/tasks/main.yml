@@ -1,2 +1,8 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/5/2024
 ---
-# tasks file for /home/kali/Ansible/Infrastructure/roles/apache_ubuntu
+# Main file to call all other tasks
+- import_tasks: install.yml
+- import_tasks: configure.yml
+- import_tasks: service.yml

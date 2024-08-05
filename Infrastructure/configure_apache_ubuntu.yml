@@ -1,0 +1,12 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/5/2024
+# Purpose: This playbook will execute the Ansible Role to configure an Ubuntu box for an apache webserver
+
+---
+- hosts: localhost
+  become: true
+  become_user: root
+  roles: 
+    - apache_ubuntu
+  
