@@ -7,6 +7,7 @@
   gather_facts: yes
   become_method: sudo
   tasks:
+      # yum update
     - name: Update rhel-based distributions
       block:
         - name: Install system updates for rhel-based distributions
@@ -14,6 +15,7 @@
             name: "*"
             state: latest
             update_cache: yes
+          # Only executes yum update on RHEL-based distributions
           when: (ansible_facts['distribution'] == "RedHat") or
                 (ansible_facts['distribution'] == "CentOS") or
                 (ansible_facts['distribution'] == "Rocky")
@@ -24,11 +26,13 @@
     
     - name: Update Debian-based distributions
       block:
+          # apt update
         - name: Install system updates on Debian-based distributions
           apt:
             name: '*'
             state: latest
             update_cache: yes
+          # Only executes apt update on debian-based distributions
           when: (ansible_facts['distribution'] == "Debian") or
                 (ansible_facts['distribution'] == "Ubuntu") or
                 (ansible_facts['distribution'] == "Kali")
