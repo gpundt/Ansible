@@ -2,7 +2,6 @@
 # Name: Griffin Pundt
 # Date: 8/5/2024
 # Purpose: This playbook will execute the Ansible Role to configure a Debian-based box for an apache webserver
-
 ---
 - hosts: localhost
   become: true

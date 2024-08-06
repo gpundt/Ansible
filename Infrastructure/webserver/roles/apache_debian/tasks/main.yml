@@ -3,6 +3,10 @@
 # Date: 8/5/2024
 ---
 # Main file to call all other tasks
-- import_tasks: install.yml
-- import_tasks: configure.yml
-- import_tasks: service.yml
+- block:
+  - import_tasks: install.yml
+  - import_tasks: configure.yml
+  - import_tasks: service.yml
+    when: (ansible_facts['distribution'] == "Debian") or
+          (ansible_facts['distribution'] == "Ubuntu") or
+          (ansible_facts['distribution'] == "Kali")

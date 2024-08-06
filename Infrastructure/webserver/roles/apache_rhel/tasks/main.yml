@@ -2,6 +2,10 @@
 # Name: Griffin Pundt
 # Date: 8/6/2024
 ---
-- import_tasks: install.yml
-- import_tasks: configure.yml
-- import_tasks: service.yml
+- block:
+  - import_tasks: install.yml
+  - import_tasks: configure.yml
+  - import_tasks: service.yml
+    when: (ansible_facts['distribution'] == "RedHat") or
+          (ansible_facts['distribution'] == "CentOS") or
+          (ansible_facts['distribution'] == "Rocky")

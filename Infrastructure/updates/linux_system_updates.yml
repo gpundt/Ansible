@@ -2,9 +2,10 @@
 # Name: Griffin Pundt
 # Date: 8/6/2024
 ---
-- hosts: all
+- hosts: test
   become: yes
-
+  gather_facts: yes
+  become_method: sudo
   tasks:
     - name: Update rhel-based distributions
       block:
@@ -13,10 +14,9 @@
             name: "*"
             state: latest
             update_cache: yes
-          when:
-            - ansible_os_family == "RedHat"
-            - ansible_os_family == "CentOS"
-            - ansible_os_family == "Rocky"
+          when: (ansible_facts['distribution'] == "RedHat") or
+                (ansible_facts['distribution'] == "CentOS") or
+                (ansible_facts['distribution'] == "Rocky")
       rescue:
         - name: Print errors
           ansible.builtin.debug:
@@ -29,10 +29,9 @@
             name: '*'
             state: latest
             update_cache: yes
-          when:
-            - ansible_os_family == "Debian"
-            - ansible_os_family == "Ubuntu"
-            - ansible_os_family == "Kali"
+          when: (ansible_facts['distribution'] == "Debian") or
+                (ansible_facts['distribution'] == "Ubuntu") or
+                (ansible_facts['distribution'] == "Kali")
       rescue:
         - name: Print errors
           ansible.builtin.debug:

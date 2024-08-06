@@ -2,19 +2,24 @@
 # Name: Griffin Pundt
 # Date: 8/6/2024
 ---
-- hosts: localhost
+- hosts: test
   become: yes
+  gather_facts: yes
+  become_method: sudo
   tasks:
     - name: Update repos
       block:
         - name: executing "sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo"
           ansible.builtin.command: sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo
+          when: (ansible_facts['distribution'] == "CentOS")
 
         - name: executing "sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo"
           ansible.builtin.command: sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo
+          when: (ansible_facts['distribution'] == "CentOS")
 
         - name: executing "sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo"
           ansible.builtin.command: sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo
+          when: (ansible_facts['distribution'] == "CentOS")
           notify: yum update
       rescue:
         - name: Print errors
@@ -27,3 +32,4 @@
         name: '*'
         state: latest
         update_cache: yes
+      when: (ansible_facts['distribution'] == "CentOS")
