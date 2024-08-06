@@ -2,10 +2,26 @@
 # Name: Griffin Pundt
 # Date: 8/6/2024
 ---
-- name: Copy httpd Configuration file
-  copy: src=files/httpd.conf dest=/etc/httpd/conf/httpd.conf
+- block:
+    - name: Create directory /var/www/sammich
+      ansible.builtin.command: mkdir /var/www/sammich
+  rescue:
+    - name: "[*] FAILED [*] Create directory /var/www/sammich"
+      ansible.builtin.debug: 
+        msg: "Failed directory creation... skipping"
 
-- name: Copy index.html file
-  copy: src=files/index.html dest=/var/www/sammich/index.html
-  notify:
-  - restart apache
+- block:
+  - name: Copy httpd Configuration file
+    copy: src=files/httpd.conf dest=/etc/httpd/conf/httpd.conf
+  rescue:
+    - name: "[*] FAILED [*] Copy httpd configuration file"
+      ansible.builtin.debug:
+        msg: "Failed config file copy... skipping"
+
+- block:
+  - name: Copy index.html file
+    copy: src=files/index.html dest=/var/www/sammich/index.html
+  rescue:
+    - name: "[*] FAILED [*] Copy index.html file"
+      ansible.builtin.debug: 
+        msg: "Failed index.html copy... skipping"

@@ -2,5 +2,10 @@
 # Name: Griffin Pundt
 # Date: 8/6/2024
 ---
-- name: Start and enable httpd service
-  service: name=httpd state=restarted enabled=yes
+- block:
+  - name: Restart enable httpd
+    service: name=httpd state=restarted enabled=yes
+  rescue:
+    - name: "[*] FAILED [*] Restart and enable httpd"
+      ansible.builtin.debug:
+        msg: "Failed service restart... skipping"

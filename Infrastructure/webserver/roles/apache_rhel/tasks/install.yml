@@ -2,5 +2,23 @@
 # Name: Griffin Pundt
 # Date: 8/6/2024
 ---
-- name: Install httpd Package
-  yum: name=httpd state=latest
+- block:
+    - name: Update yum packages
+      yum:
+        name: '*'
+        state: latest
+        update_cache: yes
+  rescue:
+    - name: "[*] FAILED [*] Update yum packages"
+      ansible.builtin.debug:
+        msg: "Error updating packages... skipping"
+
+- block:
+  - name: Install httpd Package
+    yum: 
+      name: httpd
+      state: latest
+  rescue:
+  - name: "[*] FAILED [*] Install httpd package"
+    ansible.builtin.debug:
+      msg: "Error installing httpd... skipping"
