@@ -1,0 +1,35 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/6/2024
+---
+# Installs necessary packages to host a PostgreSql database
+- block:
+  - name: apt update
+    apt:
+      name: '*'
+      state: latest
+      update_cache: yes
+  rescue:
+  - name: "[*] FAILED [*] apt update"
+    ansible.builtin.debug:
+      msg: "Error updating packages... skipping"
+
+- block:
+  - name: Install postgresql package
+    apt:
+      name: postgresql
+      state: latest
+  rescue:
+  - name: "[*] FAILED [*] Install postgresql package"
+    ansible.builtin.debug:
+      msg: "Error installing package... skipping"
+
+- block:
+  - name: Install additional packages (postgresql-contrib)
+    apt:
+      name: postgresql-contrib
+      state: latest
+  rescue:
+  - name: "[*] FAILED [*] Install additional packages (postgresql-contrib)"
+    ansible.builtin.debug:
+      msg: "Error installing package... skipping"

@@ -1,0 +1,10 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/6/2024
+---
+# tasks file for /home/kali/Ansible/Infrastructure/database/roles/postgresql_ubuntu
+- block:
+  - import_tasks: install.yml
+  - import_tasks: configure.yml
+  - import_tasks: service.yml
+    when: (ansible_facts['distribution'] == "Ubuntu")

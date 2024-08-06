@@ -1,0 +1,12 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/6/2024
+---
+- block:
+  - name: "Configuring postgresql database"
+    ansible.builtin.debug:
+      msg: "[*] NOTHING YET [*]"
+  rescue:
+  - name: "[*] FAILED [*] Configuring postgresql database"
+    ansible.builtin.debug:
+      msg: "Failed configuration... skipping"   
