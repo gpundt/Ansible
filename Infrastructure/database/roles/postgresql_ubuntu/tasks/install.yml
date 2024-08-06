@@ -4,6 +4,7 @@
 ---
 # Installs necessary packages to host a PostgreSql database
 - block:
+    # apt update
   - name: apt update
     apt:
       name: '*'
@@ -15,6 +16,7 @@
       msg: "Error updating packages... skipping"
 
 - block:
+    # Install postgresql package to host SQL database
   - name: Install postgresql package
     apt:
       name: postgresql
@@ -25,6 +27,7 @@
       msg: "Error installing package... skipping"
 
 - block:
+    # Install additional packages to finalize database
   - name: Install additional packages (postgresql-contrib)
     apt:
       name: postgresql-contrib
