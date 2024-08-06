@@ -7,6 +7,7 @@
   - import_tasks: install.yml
   - import_tasks: configure.yml
   - import_tasks: service.yml
+    # Will only execute tasks on Debian-based distributions
     when: (ansible_facts['distribution'] == "Debian") or
           (ansible_facts['distribution'] == "Ubuntu") or
           (ansible_facts['distribution'] == "Kali")

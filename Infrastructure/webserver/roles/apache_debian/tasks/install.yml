@@ -4,6 +4,7 @@
 ---
 #Installs necessary packages to run the webserver
 - block:
+    #performs an apt update
   - name: Update apt packages
     apt:
       name: '*'
@@ -15,6 +16,7 @@
       msg: "Error updating packages... skipping"
 
 - block:
+    # Installs programs to host a webserver
   - name: Install Apache package
     apt:
       name: apache2
@@ -24,7 +26,8 @@
     ansible.builtin.debug:
       msg: "Error installing apache... skipping"
 
-- block:    
+- block:   
+    # Installs Ubuntu firewall for remote connections
   - name: Install ufw firewall
     apt:
       name: ufw

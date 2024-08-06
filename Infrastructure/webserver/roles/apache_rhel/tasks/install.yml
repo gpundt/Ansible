@@ -3,6 +3,7 @@
 # Date: 8/6/2024
 ---
 - block:
+      # yum update
     - name: Update yum packages
       yum:
         name: '*'
@@ -14,6 +15,7 @@
         msg: "Error updating packages... skipping"
 
 - block:
+    # yum install httpd package to host the webserver
   - name: Install httpd Package
     yum: 
       name: httpd

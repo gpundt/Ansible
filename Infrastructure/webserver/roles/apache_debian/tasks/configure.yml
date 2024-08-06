@@ -4,29 +4,38 @@
 ---
 # Configures webserver
 - block:
+    #Creates firewall rule to allow apache connections
   - name: Create firewall rule
     ansible.builtin.command: ufw allow "Apache"
 
+    #Creates directories for future webpage files
   - name: Create webpage directories
     ansible.builtin.command: mkdir /var/www/sammich
 
+    #Changing directory ownership to root
   - name: Change directory ownership
     ansible.builtin.command: chown -R root:root /var/www/sammich
 
   - name: Change directory permissions
     ansible.builtin.command: chmod -R 755 /var/www/sammich
 
+    #Moving default sammich webpage to correct location
   - name: Copy default webpage (index.html)
     copy: src=files/index.html dest=/var/www/sammich/index.html
 
+    #Moving apahce2 config file to correct location
   - name: Copy apache2 config file (sammich.conf)
     copy: src=files/sammich.conf dest=/etc/apache2/sites-available/sammich.conf
 
+    #Pointing apache to use new config file
   - name: Enable config file (sammich.conf)
     ansible.builtin.command: a2ensite /etc/apache2/sites-available/sammich.conf
 
+    #Preventing apache from using old config file
   - name: Disable original config file
     ansible.builtin.command: a2dissite 000-default.conf
+  
+  # If above instructions fail, kill the program
   rescue:
   - name: "[*] FAILED [*] Webserver configuration"
     ansible.builtin.debug:

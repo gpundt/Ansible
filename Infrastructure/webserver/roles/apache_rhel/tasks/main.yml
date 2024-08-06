@@ -6,6 +6,7 @@
   - import_tasks: install.yml
   - import_tasks: configure.yml
   - import_tasks: service.yml
+    # Will only execute tasks on RHEL-based distributions
     when: (ansible_facts['distribution'] == "RedHat") or
           (ansible_facts['distribution'] == "CentOS") or
           (ansible_facts['distribution'] == "Rocky")

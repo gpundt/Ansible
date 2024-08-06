@@ -3,7 +3,7 @@
 # Date: 8/6/2024
 ---
 - block:
-  - name: Restart enable httpd
+  - name: Restart and enable httpd
     service: name=httpd state=restarted enabled=yes
   rescue:
     - name: "[*] FAILED [*] Restart and enable httpd"

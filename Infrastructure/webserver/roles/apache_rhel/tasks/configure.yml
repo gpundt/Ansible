@@ -3,6 +3,7 @@
 # Date: 8/6/2024
 ---
 - block:
+      # Creates directory for future webserver files
     - name: Create directory /var/www/sammich
       ansible.builtin.command: mkdir /var/www/sammich
   rescue:
@@ -11,6 +12,11 @@
         msg: "Failed directory creation... skipping"
 
 - block:
+    # Renames original httpd.conf file so we dont overwrite it
+  - name: Backup original httpd.conf file
+    ansible.builtin.command: mv /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.org
+  
+    # Moves new httpd.conf to correct location
   - name: Copy httpd Configuration file
     copy: src=files/httpd.conf dest=/etc/httpd/conf/httpd.conf
   rescue:
@@ -19,6 +25,7 @@
         msg: "Failed config file copy... skipping"
 
 - block:
+    # Moves new index.html file to correct location
   - name: Copy index.html file
     copy: src=files/index.html dest=/var/www/sammich/index.html
   rescue:
