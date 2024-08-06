@@ -3,16 +3,33 @@
 # Date: 8/5/2024
 ---
 #Installs necessary packages to run the webserver
-- name: Update apt package cache
-  apt:
-    update_cache: yes
+- block:
+  - name: Update apt packages
+    apt:
+      name: '*'
+      state: latest
+      update_cache: yes
+  rescue:
+  - name: "[*] FAILED [*] Update apt packages"
+    ansible.builtin.debug:
+      msg: "Error updating packages... skipping"
 
-- name: Install Apache package
-  apt:
-    name: apache2
-    present: yes
-    
-- name: Install ufw firewall
-  apt:
-    name: ufw
-    present: yes
+- block:
+  - name: Install Apache package
+    apt:
+      name: apache2
+      state: latest
+  rescue:
+  - name: "[*] FAILED [*] Install Apache package"
+    ansible.builtin.debug:
+      msg: "Error installing apache... skipping"
+
+- block:    
+  - name: Install ufw firewall
+    apt:
+      name: ufw
+      state: latest
+  rescue:
+  - name: "[*] FAILED [*] Install ufw firewall"
+    ansible.builtin.debug: 
+      msg: "Error installing ufw... skipping"

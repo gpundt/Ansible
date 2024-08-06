@@ -3,26 +3,31 @@
 # Date: 8/5/2024
 ---
 # Configures webserver
-- name: Create firewall rule
-  ansible.builtin.command: ufw allow "Apache"
+- block:
+  - name: Create firewall rule
+    ansible.builtin.command: ufw allow "Apache"
 
-- name: Create webpage directories
-  ansible.builtin.command: mkdir /var/www/sammich
+  - name: Create webpage directories
+    ansible.builtin.command: mkdir /var/www/sammich
 
-- name: Change directory ownership
-  ansible.builtin.command: chown -R root:root /var/www/sammich
+  - name: Change directory ownership
+    ansible.builtin.command: chown -R root:root /var/www/sammich
 
-- name: Change directory permissions
-  ansible.builtin.command: chmod -R 755 /var/www/sammich
+  - name: Change directory permissions
+    ansible.builtin.command: chmod -R 755 /var/www/sammich
 
-- name: Copy default webpage (index.html)
-  copy: src=files/index.html dest=/var/www/sammich/index.html
+  - name: Copy default webpage (index.html)
+    copy: src=files/index.html dest=/var/www/sammich/index.html
 
-- name: Copy apache2 config file (sammich.conf)
-  copy: src=files/sammich.conf dest=/etc/apache2/sites-available/sammich.conf
+  - name: Copy apache2 config file (sammich.conf)
+    copy: src=files/sammich.conf dest=/etc/apache2/sites-available/sammich.conf
 
-- name: Enable config file (sammich.conf)
-  ansible.builtin.command: a2ensite /etc/apache2/sites-available/sammich.conf
+  - name: Enable config file (sammich.conf)
+    ansible.builtin.command: a2ensite /etc/apache2/sites-available/sammich.conf
 
-- name: Disable original config file
-  ansible.builtin.command: a2dissite 000-default.conf
+  - name: Disable original config file
+    ansible.builtin.command: a2dissite 000-default.conf
+  rescue:
+  - name: "[*] FAILED [*] Webserver configuration"
+    ansible.builtin.debug:
+      msg: "Configuration failed... please debug"
