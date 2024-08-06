@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - /home/kali/Ansible/Infrastructure/roles/apache_rhel

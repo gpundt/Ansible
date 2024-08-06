@@ -1,0 +1,6 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/6/2024
+---
+- name: Start and enable httpd service
+  service: name=httpd state=restarted enabled=yes

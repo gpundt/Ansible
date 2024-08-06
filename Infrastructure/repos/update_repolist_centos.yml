@@ -1,0 +1,29 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/6/2024
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: Update repos
+      block:
+        - name: executing "sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo"
+          ansible.builtin.command: sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo
+
+        - name: executing "sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo"
+          ansible.builtin.command: sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo
+
+        - name: executing "sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo"
+          ansible.builtin.command: sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo
+          notify: yum update
+      rescue:
+        - name: Print errors
+          ansible.builtin.debug:
+            msg: 'commands failed... please debug'
+  
+  handlers:
+    - name: yum update
+      yum:
+        name: '*'
+        state: latest
+        update_cache: yes

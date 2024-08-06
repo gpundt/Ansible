@@ -1,0 +1,7 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/6/2024
+---
+# handlers file for /home/kali/Ansible/Infrastructure/roles/apache_rhel
+- name: restart apache
+  service: name=httpd state=restarted

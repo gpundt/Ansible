@@ -1,0 +1,6 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/6/2024
+---
+- name: Install httpd Package
+  yum: name=httpd state=latest

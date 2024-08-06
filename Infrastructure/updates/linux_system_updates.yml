@@ -1,0 +1,40 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/6/2024
+---
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: Update rhel-based distributions
+      block:
+        - name: Install system updates for rhel-based distributions
+          yum:
+            name: "*"
+            state: latest
+            update_cache: yes
+          when:
+            - ansible_os_family == "RedHat"
+            - ansible_os_family == "CentOS"
+            - ansible_os_family == "Rocky"
+      rescue:
+        - name: Print errors
+          ansible.builtin.debug:
+            msg: "Errors encountered... please debug"
+    
+    - name: Update Debian-based distributions
+      block:
+        - name: Install system updates on Debian-based distributions
+          apt:
+            name: '*'
+            state: latest
+            update_cache: yes
+          when:
+            - ansible_os_family == "Debian"
+            - ansible_os_family == "Ubuntu"
+            - ansible_os_family == "Kali"
+      rescue:
+        - name: Print errors
+          ansible.builtin.debug:
+            msg: "Errors encountered... please debug"
+  
