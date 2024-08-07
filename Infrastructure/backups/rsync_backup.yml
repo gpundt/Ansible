@@ -1,0 +1,9 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/7/2024
+---
+- hosts: test
+  become: true
+  become_user: root
+  roles:
+    - rsync_backup
