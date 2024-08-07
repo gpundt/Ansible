@@ -1,0 +1,36 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/7/2024
+---
+- block:
+  # Adding the repository key to target system
+  - name: Adding repository key
+    ansible.builtin.command:
+      cmd: wget -q -O - https://pgk.jenkins.io/debian-stable/jenkins.io.key | gpg --dearmor -o /usr/share/keyrings/jenkins.gpg
+  rescue:
+  - name: "[*] FAILED [*] Adding repository key"
+    ansible.builtin.debug:
+      msg: "Repository key addition failed... skipping"
+
+
+- block:
+  # Append debian package repository address to target host's sources.list
+  - name: Append Debian package repository
+    ansible.builtin.command:
+      cmd: sh -c 'echo deb [signed-by=/usr/shae/keyrings/jenkins.gpg] http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+  rescue:
+  - name: "[*] FAILED [*] Append Debian package repository"
+    ansible.builtin.debug:
+      msg: "Append failed... skipping"
+
+- block:
+  # apt update
+  - name: apt update
+    apt:
+      name: '*'
+      state: latest
+      update_cache: yes
+  rescue:
+  - name: "[*] FAILED [*] apt update"
+    ansible.builtin.debug:
+      msg: "Error updating packages... skipping"
