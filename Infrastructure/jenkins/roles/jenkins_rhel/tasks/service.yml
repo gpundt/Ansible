@@ -7,6 +7,7 @@
   - name: Restart and enable Jenkins
     service: name=jenkins state=restarted enabled=yes
   rescue:
-    - name: "[*] FAILED [*] Restart and enable Jenkins"
-      ansible.builtin.debug:
-        msg: "Failed service restart... skipping"
+    - name: "[*] FAILED [*] Restart and enable Jenkins... Removing Jenkins"
+      yum:
+        name: jenkins
+        state: absent

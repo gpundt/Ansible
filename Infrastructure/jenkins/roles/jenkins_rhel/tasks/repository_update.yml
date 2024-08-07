@@ -1,0 +1,30 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/7/2024
+---
+- block:
+  # Add jenkins repository
+  - name: Add jenkins repository
+    ansible.builtin.command:
+      cmd: "wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo"
+  rescue:
+  - name: "[*] FAILED [*] Add jenkins repository... removing repository"
+    ansible.builtin.file:
+      path: /etc/yum.repos.d/jenkins.repo
+      state: absent
+
+- block:
+  # Import gpg key for repository
+  - name: Import gpg key
+    ansible.builtin.command:
+      cmd: "rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key"
+  rescue:
+  - name: "[*] FAILED [*] Import gpg key"
+    ansible.builtin.debug:
+      msg: "Failed key import... skipping"
+  always:
+  - name: dnf update
+    yum:
+      name: "*"
+      state: latest
+      update_cache: yes

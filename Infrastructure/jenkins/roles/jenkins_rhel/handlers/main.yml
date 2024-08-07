@@ -1,2 +1,7 @@
 ---
 # handlers file for /home/kali/Ansible/Infrastructure/jenkins/roles/jenkins_ubuntu
+- name: apt update
+  apt:
+    name: '*'
+    state: latest
+    update_cache: yes

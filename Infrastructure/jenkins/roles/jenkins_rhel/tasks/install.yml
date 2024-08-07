@@ -1,0 +1,36 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/7/2024
+---
+- block:
+  # Install Java JDK
+  - name: Install Java Development Kit
+    yum:
+      name: java-1.8.0-openjdk
+      state: latest
+  rescue:
+    - name: "[*] FAILED [*] Install Java Development Kit"
+      ansible.builtin.debug:
+        msg: "Failed to install java... skipping"
+
+- block:
+  #Install Jenkins package
+  - name: Install Jenkins package
+    yum:
+      name: jenkins
+      state: latest
+  rescue:
+  - name: "[*] FAILED [*] Install Jenkins package"
+    ansible.builtin.debug:
+      msg: "Error installing Jenkins... skipping"
+
+- block:
+  #Install wget package
+  - name: Install wget package
+    yum:
+      name: wget
+      state: latest
+  rescue:
+  - name: "[*] FAILED [*] Install wget package"
+    ansible.builtin.debug:
+      msg: "Error installing wget... skipping"

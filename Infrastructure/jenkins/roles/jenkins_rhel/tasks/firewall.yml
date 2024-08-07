@@ -1,0 +1,26 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/7/2024
+---
+- block:
+  # allow port 8080 through firewall
+  - name: Allow port 8080 in firewalld
+    ansible.posix.firewalld:
+      zone: public
+      port: 8080/tcp
+      permanent: true
+      state: enabled
+  rescue:
+  - name: "[*] FAILED [*] Allow port 8080 in firewall"
+    ansible.builtin.debug:
+      msg: "Failed to open port... skipping"
+
+- block:
+  # reload firewall
+  - name: Reload firewall
+    ansible.builtin.command:
+      cmd: firewall-cmd --reload
+  rescue:
+    - name: "[*] FAILED [*] Reload firewall"
+      ansible.builtin.debug:
+        msg: "Failed to reload firewall... skipping"
