@@ -7,6 +7,7 @@
   - name: Restart and enable postgresql
     service: name=postgresql state=restarted enabled=yes
   rescue:
-  - name: "[*] FAILED [*] Restart and enable postgresql"
-    ansible.builtin.debug:
-      msg: "Failed service restart... skipping"
+  - name: "[*] FAILED [*] Restart and enable postgresql... removing package"
+    apt:
+      name: postgresql
+      state: absent

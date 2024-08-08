@@ -7,6 +7,7 @@
   - name: Restart and enable apache2
     service: name=apache2 state=restarted enabled=yes
   rescue:
-  - name: "[*] FAILED [*] Restart and enable apache2"
-    ansible.builtin.debug:
-      msg: "Failed service restart... skipping"
+  - name: "[*] FAILED [*] Restart and enable apache2... removing package"
+    apt:
+      name: apache2
+      state: absent
