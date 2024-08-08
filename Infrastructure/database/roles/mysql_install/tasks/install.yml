@@ -1,0 +1,56 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/8/2024
+
+---
+- block:
+    # yum update
+    - name: Update yum packages
+      yum:
+        name: '*'
+        state: latest
+        update_cache: yes
+        # Only executes yum update on RHEL-based distributions
+      when: (ansible_facts['distribution'] == "RedHat") or
+            (ansible_facts['distribution'] == "CentOS") or
+            (ansible_facts['distribution'] == "Rocky")
+  rescue:
+    - name: "[*] FAILED [*] Update yum packages"
+      ansible.builtin.debug:
+        msg: "Error updating yum packages... skipping"
+
+- block:
+    # apt update
+    - name: apt update
+      apt:
+        name: '*'
+        state: latest
+        update_cache: yes
+        # Only executes apt update on debian-based distributions
+      when: (ansible_facts['distribution'] == "Debian") or
+            (ansible_facts['distribution'] == "Ubuntu") or
+            (ansible_facts['distribution'] == "Kali")
+  rescue:
+    - name: Print errors
+      ansible.builtin.debug:
+        msg: "Errors encountered... please debug"
+
+
+- block:
+    # Install mysql-server on rhel-based box
+    - name: yum install mysql-server
+      yum:
+        name: mysql-server
+        state: latest
+      when: (ansible_facts['distribution'] == "RedHat") or
+            (ansible_facts['distribution'] == "CentOS") or
+            (ansible_facts['distribution'] == "Rocky")
+
+    # Install mysql-server on debian-based box
+    - name: apt install mysql-server
+      apt:
+        name: mysql-server
+        state: latest
+      when: (ansible_facts['distribution'] == "Debian") or
+            (ansible_facts['distribution'] == "Ubuntu") or
+            (ansible_facts['distribution'] == "Kali")

@@ -1,0 +1,7 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/8/2024
+---
+- block:
+  - import_tasks: install.yml
+  - import_tasks: service.yml

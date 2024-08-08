@@ -1,0 +1,25 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/8/2024
+---
+- block:
+  - name: Start and enable mysql-server
+    service: name=mysql-server state=restarted enabled=yes
+  rescue:
+      #If systemd fails on rhel-based box, removes mysql-server package
+    - name: "[*] FAILED [*] Restart and enable mysql-server... removing package"
+      yum:
+        name: mysql-server
+        state: absent
+      when: (ansible_facts['distribution'] == "RedHat") or
+            (ansible_facts['distribution'] == "CentOS") or
+            (ansible_facts['distribution'] == "Rocky")
+
+      #If systemd fails on debian-based box, removes mysql-server package
+    - name: "[*] FAILED [*] Restart and enable mysql-server... removing package"
+      apt:
+        name: mysql-server
+        state: absent
+      when: (ansible_facts['distribution'] == "Debian") or
+            (ansible_facts['distribution'] == "Ubuntu") or
+            (ansible_facts['distribution'] == "Kali")

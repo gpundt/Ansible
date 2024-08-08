@@ -1,0 +1,12 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/8/2024
+# This playbook will install mySQL server on a linux box
+---
+- hosts: test
+  become: yes
+  gather_facts: yes
+  become_method: sudo
+  roles:
+    - mysql_install
+  
