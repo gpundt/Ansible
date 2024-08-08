@@ -1,0 +1,10 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/8/2024
+# This playbook will configure a PostgreSQL database on an debian-based Box
+---
+- hosts: localhost
+  become: true
+  become_user: root
+  roles: 
+    - postgresql_debian
