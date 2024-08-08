@@ -1,0 +1,13 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/8/2024
+---
+- block:
+  - import_tasks: repository_update.yml
+  - import_tasks: install.yml
+  - import_tasks: firewall.yml
+  - import_tasks: service.yml
+    #Only executes on debian-based distributions
+    when: (ansible_facts['distribution'] == "Debian") or
+          (ansible_facts['distribution'] == "Ubuntu") or
+          (ansible_facts['distribution'] == "Kali")

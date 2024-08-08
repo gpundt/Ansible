@@ -1,0 +1,31 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/8/2024
+---
+- block:
+  # Add jenkins repository
+  - name: Add jenkins repository
+    ansible.builtin.command:
+      cmd: "url -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | tee /usr/share/keyrings/jenkins-keyring.asc"
+  rescue:
+  - name: "[*] FAILED [*] Add jenkins repository... removing repository"
+    ansible.builtin.file:
+      path: /etc/apt/sources.list.d/jenkins.list
+      state: absent
+
+
+- block:
+  # Import gpg key for repository
+  - name: Import repo key
+    ansible.builtin.command:
+      cmd: "echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | tee /etc/apt/sources.list.d/jenkins.list"
+  rescue:
+  - name: "[*] FAILED [*] Import repo key"
+    ansible.builtin.debug:
+      msg: "Failed key import... skipping"
+  always:
+  - name: apt update
+    apt:
+      name: "*"
+      state: latest
+      update_cache: yes

@@ -1,0 +1,13 @@
+# code: language=ansible
+# Name: Griffin Pundt
+# Date: 8/8/2024
+---
+- block:
+    # Restarts and enables Jenkins
+  - name: Restart and enable Jenkins
+    service: name=jenkins state=restarted enabled=yes
+  rescue:
+    - name: "[*] FAILED [*] Restart and enable Jenkins... Removing Jenkins"
+      yum:
+        name: jenkins
+        state: absent
