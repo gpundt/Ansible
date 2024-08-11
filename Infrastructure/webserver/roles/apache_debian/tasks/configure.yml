@@ -23,6 +23,14 @@
   - name: Copy default webpage (index.html)
     copy: src=files/index.html dest=/var/www/sammich/index.html
 
+    #Moving css file
+  - name: Copy additional webpage file
+    copy: src=files/styles.css dest=/var/www/sammich/styles.css
+
+    #Moving turkey sandwich image
+  - name: Copy sandwich image
+    copy: src=files/turkey-sandwich.jpg dest=/var/www/sammich/turkey-sandwich.jpg
+
     #Moving apahce2 config file to correct location
   - name: Copy apache2 config file (sammich.conf)
     copy: src=files/sammich.conf dest=/etc/apache2/sites-available/sammich.conf
